@@ -54,6 +54,12 @@ function Index() {
       <section className="px-5 pt-8">
         <h3 className="text-lg font-bold">Quick Actions</h3>
         <div className="mt-4 space-y-3">
+          <Link
+            to="/scan"
+            className="flex h-16 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-accent-foreground/80 text-lg font-semibold text-primary-foreground shadow-md"
+          >
+            <span className="text-2xl">🔬</span> Scan Leaf for Diagnosis
+          </Link>
           <Button onClick={g.waterNow} className="h-16 w-full rounded-2xl text-lg font-semibold shadow-md">
             <span className="mr-2 text-2xl">💧</span> Water Now
           </Button>
