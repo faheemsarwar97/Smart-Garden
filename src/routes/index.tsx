@@ -16,7 +16,7 @@ function Index() {
         <h1 className="text-2xl font-bold tracking-tight">Smart Garden</h1>
         <div className="flex items-center gap-3 text-2xl">
           <Link to="/alerts" aria-label="Alerts">🔔</Link>
-          <button aria-label="Settings">⚙️</button>
+          <Link to="/settings" aria-label="Settings">⚙️</Link>
         </div>
       </header>
 
@@ -28,7 +28,7 @@ function Index() {
               <h2 className="text-xl font-bold leading-tight">{g.plantName}</h2>
               <p className="text-sm text-muted-foreground">{g.location}</p>
             </div>
-            <Link to="/status" className="rounded-lg border border-primary/40 px-3 py-2 text-xs font-medium text-foreground">
+            <Link to="/plant" className="rounded-lg border border-primary/40 px-3 py-2 text-center text-xs font-medium text-foreground">
               View Plant<br />Details
             </Link>
           </div>
