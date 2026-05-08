@@ -30,21 +30,37 @@ export type Tip = {
 type State = {
   plantName: string;
   location: string;
+  species: string;
+  plantedOn: string;
   healthScore: number;
   moisture: number;
   temperature: number;
   light: number;
   lightsOn: boolean;
+  lightBrightness: number;
   lastWatered: string;
   lightHours: number;
   automations: Automation[];
   alerts: Alert[];
   tips: Tip[];
+  settings: Settings;
   waterNow: () => void;
   toggleLights: () => void;
+  setBrightness: (n: number) => void;
   toggleAutomation: (id: string) => void;
   addAutomation: (a: Omit<Automation, "id" | "enabled">) => void;
   dismissAlert: (id: string) => void;
+  updateSettings: (patch: Partial<Settings>) => void;
+  renamePlant: (name: string, location: string) => void;
+};
+
+export type Settings = {
+  notifications: boolean;
+  pushAlerts: boolean;
+  emailDigest: boolean;
+  units: "metric" | "imperial";
+  theme: "light" | "dark";
+  awayMode: boolean;
 };
 
 const Ctx = createContext<State | null>(null);
@@ -52,8 +68,19 @@ const Ctx = createContext<State | null>(null);
 export function GardenProvider({ children }: { children: ReactNode }) {
   const [moisture, setMoisture] = useState(54);
   const [lightsOn, setLightsOn] = useState(true);
+  const [lightBrightness, setLightBrightness] = useState(75);
   const [lastWatered, setLastWatered] = useState("2 days ago");
   const [healthScore, setHealthScore] = useState(92);
+  const [plantName, setPlantName] = useState("Luna's Planter");
+  const [location, setLocation] = useState("Indoor Garden");
+  const [settings, setSettings] = useState<Settings>({
+    notifications: true,
+    pushAlerts: true,
+    emailDigest: false,
+    units: "metric",
+    theme: "light",
+    awayMode: false,
+  });
   const [automations, setAutomations] = useState<Automation[]>([
     { id: "1", name: "Morning Light", description: "Turn on grow lights", time: "7:00 AM", emoji: "🌅", enabled: true },
     { id: "2", name: "Evening Water", description: "Auto-water if soil dry", time: "6:00 PM", emoji: "💧", enabled: true },
@@ -98,24 +125,43 @@ export function GardenProvider({ children }: { children: ReactNode }) {
     setAlerts((list) => list.filter((a) => a.id !== id));
   }, []);
 
+  const updateSettings = useCallback((patch: Partial<Settings>) => {
+    setSettings((s) => ({ ...s, ...patch }));
+  }, []);
+
+  const renamePlant = useCallback((name: string, loc: string) => {
+    setPlantName(name);
+    setLocation(loc);
+    toast.success("Plant updated");
+  }, []);
+
+  const setBrightness = useCallback((n: number) => setLightBrightness(n), []);
+
   const value: State = {
-    plantName: "Luna's Planter",
-    location: "Indoor Garden",
+    plantName,
+    location,
+    species: "Pothos (Epipremnum aureum)",
+    plantedOn: "March 14, 2025",
     healthScore,
     moisture,
     temperature: 23,
     light: 780,
     lightsOn,
+    lightBrightness,
     lastWatered,
     lightHours: 6.5,
     automations,
     alerts,
     tips,
+    settings,
     waterNow,
     toggleLights,
+    setBrightness,
     toggleAutomation,
     addAutomation,
     dismissAlert,
+    updateSettings,
+    renamePlant,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
