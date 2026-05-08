@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StatusRouteImport } from './routes/status'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ScanRouteImport } from './routes/scan'
 import { Route as PlantRouteImport } from './routes/plant'
 import { Route as AutomationsRouteImport } from './routes/automations'
 import { Route as AlertsRouteImport } from './routes/alerts'
@@ -24,6 +25,11 @@ const StatusRoute = StatusRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScanRoute = ScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlantRoute = PlantRouteImport.update({
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/alerts': typeof AlertsRoute
   '/automations': typeof AutomationsRoute
   '/plant': typeof PlantRoute
+  '/scan': typeof ScanRoute
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/alerts': typeof AlertsRoute
   '/automations': typeof AutomationsRoute
   '/plant': typeof PlantRoute
+  '/scan': typeof ScanRoute
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/alerts': typeof AlertsRoute
   '/automations': typeof AutomationsRoute
   '/plant': typeof PlantRoute
+  '/scan': typeof ScanRoute
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
 }
@@ -79,16 +88,25 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/automations'
     | '/plant'
+    | '/scan'
     | '/settings'
     | '/status'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/alerts' | '/automations' | '/plant' | '/settings' | '/status'
+  to:
+    | '/'
+    | '/alerts'
+    | '/automations'
+    | '/plant'
+    | '/scan'
+    | '/settings'
+    | '/status'
   id:
     | '__root__'
     | '/'
     | '/alerts'
     | '/automations'
     | '/plant'
+    | '/scan'
     | '/settings'
     | '/status'
   fileRoutesById: FileRoutesById
@@ -98,6 +116,7 @@ export interface RootRouteChildren {
   AlertsRoute: typeof AlertsRoute
   AutomationsRoute: typeof AutomationsRoute
   PlantRoute: typeof PlantRoute
+  ScanRoute: typeof ScanRoute
   SettingsRoute: typeof SettingsRoute
   StatusRoute: typeof StatusRoute
 }
@@ -116,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scan': {
+      id: '/scan'
+      path: '/scan'
+      fullPath: '/scan'
+      preLoaderRoute: typeof ScanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/plant': {
@@ -154,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   AlertsRoute: AlertsRoute,
   AutomationsRoute: AutomationsRoute,
   PlantRoute: PlantRoute,
+  ScanRoute: ScanRoute,
   SettingsRoute: SettingsRoute,
   StatusRoute: StatusRoute,
 }
