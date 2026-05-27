@@ -13,6 +13,7 @@ import { Route as StatusRouteImport } from './routes/status'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScanRouteImport } from './routes/scan'
 import { Route as PlantRouteImport } from './routes/plant'
+import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AutomationsRouteImport } from './routes/automations'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
@@ -37,6 +38,11 @@ const PlantRoute = PlantRouteImport.update({
   path: '/plant',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChatRoute = ChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AutomationsRoute = AutomationsRouteImport.update({
   id: '/automations',
   path: '/automations',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/automations': typeof AutomationsRoute
+  '/chat': typeof ChatRoute
   '/plant': typeof PlantRoute
   '/scan': typeof ScanRoute
   '/settings': typeof SettingsRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/automations': typeof AutomationsRoute
+  '/chat': typeof ChatRoute
   '/plant': typeof PlantRoute
   '/scan': typeof ScanRoute
   '/settings': typeof SettingsRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/automations': typeof AutomationsRoute
+  '/chat': typeof ChatRoute
   '/plant': typeof PlantRoute
   '/scan': typeof ScanRoute
   '/settings': typeof SettingsRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/automations'
+    | '/chat'
     | '/plant'
     | '/scan'
     | '/settings'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/automations'
+    | '/chat'
     | '/plant'
     | '/scan'
     | '/settings'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/alerts'
     | '/automations'
+    | '/chat'
     | '/plant'
     | '/scan'
     | '/settings'
@@ -115,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsRoute: typeof AlertsRoute
   AutomationsRoute: typeof AutomationsRoute
+  ChatRoute: typeof ChatRoute
   PlantRoute: typeof PlantRoute
   ScanRoute: typeof ScanRoute
   SettingsRoute: typeof SettingsRoute
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlantRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/automations': {
       id: '/automations'
       path: '/automations'
@@ -179,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
   AutomationsRoute: AutomationsRoute,
+  ChatRoute: ChatRoute,
   PlantRoute: PlantRoute,
   ScanRoute: ScanRoute,
   SettingsRoute: SettingsRoute,
