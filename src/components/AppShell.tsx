@@ -1,13 +1,13 @@
 import { Link, useLocation, Outlet } from "@tanstack/react-router";
-import { Home, BarChart3, Bot, Bell } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { GardenProvider } from "@/lib/garden-store";
 
 const tabs = [
-  { to: "/", label: "Home", icon: Home, emoji: "🏠" },
-  { to: "/status", label: "Status", icon: BarChart3, emoji: "📊" },
-  { to: "/automations", label: "Automations", icon: Bot, emoji: "🤖" },
-  { to: "/alerts", label: "Alerts", icon: Bell, emoji: "🚨" },
+  { to: "/", label: "Home", emoji: "🏠" },
+  { to: "/status", label: "Status", emoji: "📊" },
+  { to: "/chat", label: "Chat", emoji: "💬" },
+  { to: "/automations", label: "Auto", emoji: "🤖" },
+  { to: "/alerts", label: "Alerts", emoji: "🚨" },
 ] as const;
 
 export function AppShell() {
@@ -19,7 +19,7 @@ export function AppShell() {
           <Outlet />
         </main>
         <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-border bg-background/95 backdrop-blur">
-          <ul className="grid grid-cols-4">
+          <ul className="grid grid-cols-5">
             {tabs.map((t) => {
               const active = pathname === t.to;
               return (
