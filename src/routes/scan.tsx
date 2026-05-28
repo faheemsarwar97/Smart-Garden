@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { scanLeaf, type Diagnosis } from "@/lib/scan.functions";
+import { useGarden } from "@/lib/garden-store";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/scan")({
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/scan")({
 
 function ScanPage() {
   const scanFn = useServerFn(scanLeaf);
+  const g = useGarden();
   const fileRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -32,7 +34,24 @@ function ScanPage() {
 
     setLoading(true);
     try {
-      const res = await scanFn({ data: { imageBase64: base64, mimeType: file.type || "image/jpeg" } });
+      const res = await scanFn({
+        data: {
+          imageBase64: base64,
+          mimeType: file.type || "image/jpeg",
+          context: {
+            plantName: g.plantName,
+            species: g.species,
+            moisture: g.moisture,
+            temperature: g.temperature,
+            light: g.light,
+            lightsOn: g.lightsOn,
+            lightHours: g.lightHours,
+            lastWatered: g.lastWatered,
+            healthScore: g.healthScore,
+            recentAlerts: g.alerts.map((a) => `${a.title}: ${a.description}`),
+          },
+        },
+      });
       if (res.ok) {
         setResult(res.diagnosis);
         toast.success("Diagnosis ready");
