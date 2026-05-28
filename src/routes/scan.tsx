@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { scanLeaf, type Diagnosis } from "@/lib/scan.functions";
+import { useGarden } from "@/lib/garden-store";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/scan")({
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/scan")({
 
 function ScanPage() {
   const scanFn = useServerFn(scanLeaf);
+  const g = useGarden();
   const fileRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -32,7 +34,24 @@ function ScanPage() {
 
     setLoading(true);
     try {
-      const res = await scanFn({ data: { imageBase64: base64, mimeType: file.type || "image/jpeg" } });
+      const res = await scanFn({
+        data: {
+          imageBase64: base64,
+          mimeType: file.type || "image/jpeg",
+          context: {
+            plantName: g.plantName,
+            species: g.species,
+            moisture: g.moisture,
+            temperature: g.temperature,
+            light: g.light,
+            lightsOn: g.lightsOn,
+            lightHours: g.lightHours,
+            lastWatered: g.lastWatered,
+            healthScore: g.healthScore,
+            recentAlerts: g.alerts.map((a) => `${a.title}: ${a.description}`),
+          },
+        },
+      });
       if (res.ok) {
         setResult(res.diagnosis);
         toast.success("Diagnosis ready");
@@ -159,6 +178,50 @@ function DiagnosisCard({ d }: { d: Diagnosis }) {
               <li key={i} className="flex gap-2"><span>•</span><span>{s}</span></li>
             ))}
           </ul>
+        </Block>
+      )}
+
+      {d.historyInsight && d.historyInsight.trim().length > 0 && (
+        <Block title="🧠 Cross-referenced with your plant history">
+          <p className="text-sm leading-relaxed">{d.historyInsight}</p>
+          <Link
+            to="/chat"
+            className="mt-3 inline-flex items-center gap-1 rounded-full border border-primary/40 px-3 py-1.5 text-xs font-medium text-primary"
+          >
+            💬 Discuss this with the AI companion
+          </Link>
+        </Block>
+      )}
+
+      {d.nutrients.length > 0 && (
+        <Block title="🧬 Nutrient analysis">
+          <div className="space-y-3">
+            {d.nutrients.map((n, i) => (
+              <div key={i} className="rounded-xl border border-border bg-background p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="font-semibold">{n.nutrient}</p>
+                  <div className="flex gap-1">
+                    <Badge
+                      className={`capitalize ${
+                        n.status === "deficient"
+                          ? "bg-destructive text-destructive-foreground"
+                          : n.status === "borderline"
+                            ? "bg-warning text-warning-foreground"
+                            : n.status === "excess"
+                              ? "bg-info text-info-foreground"
+                              : ""
+                      }`}
+                    >
+                      {n.status}
+                    </Badge>
+                    <Badge variant="outline" className="capitalize">{n.mobility}</Badge>
+                  </div>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">Pattern: {n.visualPattern}</p>
+                <p className="mt-1 text-sm">{n.recommendation}</p>
+              </div>
+            ))}
+          </div>
         </Block>
       )}
 
