@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode } from "react";
 import { toast } from "sonner";
 
 export type Automation = {
@@ -69,8 +69,13 @@ export function GardenProvider({ children }: { children: ReactNode }) {
   const [moisture, setMoisture] = useState(54);
   const [lightsOn, setLightsOn] = useState(true);
   const [lightBrightness, setLightBrightness] = useState(75);
-  const [lastWatered, setLastWatered] = useState("2 days ago");
-  const [healthScore, setHealthScore] = useState(92);
+  // Track watering as a timestamp so "last watered" updates live.
+  const [lastWateredAt, setLastWateredAt] = useState<number>(
+    () => Date.now() - 2 * 24 * 60 * 60 * 1000,
+  );
+  // Accumulated light-on hours for today (live, increments while lights are on).
+  const [lightHours, setLightHours] = useState<number>(6.5);
+  const [now, setNow] = useState<number>(() => Date.now());
   const [plantName, setPlantName] = useState("Luna's Planter");
   const [location, setLocation] = useState("Indoor Garden");
   const [settings, setSettings] = useState<Settings>({
@@ -87,6 +92,29 @@ export function GardenProvider({ children }: { children: ReactNode }) {
     { id: "3", name: "Night Mode", description: "Turn off grow lights", time: "10:00 PM", emoji: "🌙", enabled: true },
     { id: "4", name: "Weekly Feed", description: "Nutrient reminder", time: "Every Sunday", emoji: "🧪", enabled: false },
   ]);
+
+  // Tick every second so derived values (last watered, light hours) update live.
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Soil dries slowly over time (~1% per minute) so watering visibly changes things.
+  useEffect(() => {
+    const id = setInterval(() => {
+      setMoisture((m) => Math.max(15, m - 1));
+    }, 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Accumulate light hours while grow lights are on.
+  useEffect(() => {
+    if (!lightsOn) return;
+    const id = setInterval(() => {
+      setLightHours((h) => Math.min(24, +(h + 1 / 3600).toFixed(2)));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [lightsOn]);
   const [alerts, setAlerts] = useState<Alert[]>([
     { id: "a1", title: "Water Level Low", description: "Reservoir at 32%. Refill recommended.", time: "2 hours ago", type: "warning", emoji: "⚠️" },
     { id: "a2", title: "Grow Light Schedule", description: "Lights will turn on in 30 minutes", time: "30 min", type: "info", emoji: "💡" },
@@ -100,8 +128,7 @@ export function GardenProvider({ children }: { children: ReactNode }) {
 
   const waterNow = useCallback(() => {
     setMoisture((m) => Math.min(100, m + 25));
-    setLastWatered("just now");
-    setHealthScore((h) => Math.min(100, h + 1));
+    setLastWateredAt(Date.now());
     toast.success("💧 Watering started", { description: "Pump activated for Luna's Planter" });
   }, []);
 
@@ -137,6 +164,17 @@ export function GardenProvider({ children }: { children: ReactNode }) {
 
   const setBrightness = useCallback((n: number) => setLightBrightness(n), []);
 
+  // Live "x ago" label, recomputed on every tick.
+  const lastWatered = useMemo(() => formatAgo(now - lastWateredAt), [now, lastWateredAt]);
+
+  // Health derives from moisture + light state so it reacts to user actions.
+  const healthScore = useMemo(() => {
+    const moistureScore = 100 - Math.abs(60 - moisture) * 1.2; // ideal ~60%
+    const lightScore = lightsOn ? 90 + (lightBrightness - 50) * 0.1 : 70;
+    const raw = moistureScore * 0.6 + lightScore * 0.4;
+    return Math.max(0, Math.min(100, Math.round(raw)));
+  }, [moisture, lightsOn, lightBrightness]);
+
   const value: State = {
     plantName,
     location,
@@ -149,7 +187,7 @@ export function GardenProvider({ children }: { children: ReactNode }) {
     lightsOn,
     lightBrightness,
     lastWatered,
-    lightHours: 6.5,
+    lightHours,
     automations,
     alerts,
     tips,
@@ -171,4 +209,16 @@ export function useGarden() {
   const ctx = useContext(Ctx);
   if (!ctx) throw new Error("useGarden must be used within GardenProvider");
   return ctx;
+}
+
+function formatAgo(ms: number): string {
+  if (ms < 5_000) return "just now";
+  const sec = Math.floor(ms / 1000);
+  if (sec < 60) return `${sec}s ago`;
+  const min = Math.floor(sec / 60);
+  if (min < 60) return `${min} min${min === 1 ? "" : "s"} ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr} hour${hr === 1 ? "" : "s"} ago`;
+  const days = Math.floor(hr / 24);
+  return `${days} day${days === 1 ? "" : "s"} ago`;
 }
