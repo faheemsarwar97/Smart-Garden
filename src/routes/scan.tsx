@@ -181,6 +181,50 @@ function DiagnosisCard({ d }: { d: Diagnosis }) {
         </Block>
       )}
 
+      {d.historyInsight && d.historyInsight.trim().length > 0 && (
+        <Block title="🧠 Cross-referenced with your plant history">
+          <p className="text-sm leading-relaxed">{d.historyInsight}</p>
+          <Link
+            to="/chat"
+            className="mt-3 inline-flex items-center gap-1 rounded-full border border-primary/40 px-3 py-1.5 text-xs font-medium text-primary"
+          >
+            💬 Discuss this with the AI companion
+          </Link>
+        </Block>
+      )}
+
+      {d.nutrients.length > 0 && (
+        <Block title="🧬 Nutrient analysis">
+          <div className="space-y-3">
+            {d.nutrients.map((n, i) => (
+              <div key={i} className="rounded-xl border border-border bg-background p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="font-semibold">{n.nutrient}</p>
+                  <div className="flex gap-1">
+                    <Badge
+                      className={`capitalize ${
+                        n.status === "deficient"
+                          ? "bg-destructive text-destructive-foreground"
+                          : n.status === "borderline"
+                            ? "bg-warning text-warning-foreground"
+                            : n.status === "excess"
+                              ? "bg-info text-info-foreground"
+                              : ""
+                      }`}
+                    >
+                      {n.status}
+                    </Badge>
+                    <Badge variant="outline" className="capitalize">{n.mobility}</Badge>
+                  </div>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">Pattern: {n.visualPattern}</p>
+                <p className="mt-1 text-sm">{n.recommendation}</p>
+              </div>
+            ))}
+          </div>
+        </Block>
+      )}
+
       {d.causes.length > 0 && (
         <Block title="🧪 Likely causes">
           <ul className="space-y-1.5 text-sm">
