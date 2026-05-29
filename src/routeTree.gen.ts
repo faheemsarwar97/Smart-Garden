@@ -9,16 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ZonesRouteImport } from './routes/zones'
 import { Route as StatusRouteImport } from './routes/status'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScanRouteImport } from './routes/scan'
+import { Route as RulesRouteImport } from './routes/rules'
 import { Route as PlantRouteImport } from './routes/plant'
 import { Route as GrowthRouteImport } from './routes/growth'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AutomationsRouteImport } from './routes/automations'
 import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ZonesRoute = ZonesRouteImport.update({
+  id: '/zones',
+  path: '/zones',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StatusRoute = StatusRouteImport.update({
   id: '/status',
   path: '/status',
@@ -32,6 +40,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const ScanRoute = ScanRouteImport.update({
   id: '/scan',
   path: '/scan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RulesRoute = RulesRouteImport.update({
+  id: '/rules',
+  path: '/rules',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlantRoute = PlantRouteImport.update({
@@ -59,6 +72,11 @@ const AlertsRoute = AlertsRouteImport.update({
   path: '/alerts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AchievementsRoute = AchievementsRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -67,88 +85,116 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
   '/alerts': typeof AlertsRoute
   '/automations': typeof AutomationsRoute
   '/chat': typeof ChatRoute
   '/growth': typeof GrowthRoute
   '/plant': typeof PlantRoute
+  '/rules': typeof RulesRoute
   '/scan': typeof ScanRoute
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
+  '/zones': typeof ZonesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
   '/alerts': typeof AlertsRoute
   '/automations': typeof AutomationsRoute
   '/chat': typeof ChatRoute
   '/growth': typeof GrowthRoute
   '/plant': typeof PlantRoute
+  '/rules': typeof RulesRoute
   '/scan': typeof ScanRoute
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
+  '/zones': typeof ZonesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
   '/alerts': typeof AlertsRoute
   '/automations': typeof AutomationsRoute
   '/chat': typeof ChatRoute
   '/growth': typeof GrowthRoute
   '/plant': typeof PlantRoute
+  '/rules': typeof RulesRoute
   '/scan': typeof ScanRoute
   '/settings': typeof SettingsRoute
   '/status': typeof StatusRoute
+  '/zones': typeof ZonesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/achievements'
     | '/alerts'
     | '/automations'
     | '/chat'
     | '/growth'
     | '/plant'
+    | '/rules'
     | '/scan'
     | '/settings'
     | '/status'
+    | '/zones'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/achievements'
     | '/alerts'
     | '/automations'
     | '/chat'
     | '/growth'
     | '/plant'
+    | '/rules'
     | '/scan'
     | '/settings'
     | '/status'
+    | '/zones'
   id:
     | '__root__'
     | '/'
+    | '/achievements'
     | '/alerts'
     | '/automations'
     | '/chat'
     | '/growth'
     | '/plant'
+    | '/rules'
     | '/scan'
     | '/settings'
     | '/status'
+    | '/zones'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AchievementsRoute: typeof AchievementsRoute
   AlertsRoute: typeof AlertsRoute
   AutomationsRoute: typeof AutomationsRoute
   ChatRoute: typeof ChatRoute
   GrowthRoute: typeof GrowthRoute
   PlantRoute: typeof PlantRoute
+  RulesRoute: typeof RulesRoute
   ScanRoute: typeof ScanRoute
   SettingsRoute: typeof SettingsRoute
   StatusRoute: typeof StatusRoute
+  ZonesRoute: typeof ZonesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/zones': {
+      id: '/zones'
+      path: '/zones'
+      fullPath: '/zones'
+      preLoaderRoute: typeof ZonesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/status': {
       id: '/status'
       path: '/status'
@@ -168,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/scan'
       fullPath: '/scan'
       preLoaderRoute: typeof ScanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rules': {
+      id: '/rules'
+      path: '/rules'
+      fullPath: '/rules'
+      preLoaderRoute: typeof RulesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/plant': {
@@ -205,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/achievements': {
+      id: '/achievements'
+      path: '/achievements'
+      fullPath: '/achievements'
+      preLoaderRoute: typeof AchievementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -217,14 +277,17 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AchievementsRoute: AchievementsRoute,
   AlertsRoute: AlertsRoute,
   AutomationsRoute: AutomationsRoute,
   ChatRoute: ChatRoute,
   GrowthRoute: GrowthRoute,
   PlantRoute: PlantRoute,
+  RulesRoute: RulesRoute,
   ScanRoute: ScanRoute,
   SettingsRoute: SettingsRoute,
   StatusRoute: StatusRoute,
+  ZonesRoute: ZonesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

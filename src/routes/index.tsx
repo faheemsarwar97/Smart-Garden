@@ -10,15 +10,34 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const g = useGarden();
+  const activeZone = g.zones.find((z) => z.id === g.activeZoneId);
+  const eta = formatEta(g.nextWaterEtaMs);
   return (
     <div>
       <header className="flex items-center justify-between border-b border-border px-5 py-5">
         <h1 className="text-2xl font-bold tracking-tight">Smart Garden</h1>
         <div className="flex items-center gap-3 text-2xl">
+          <Link to="/achievements" aria-label="Achievements">🏆</Link>
           <Link to="/alerts" aria-label="Alerts">🔔</Link>
           <Link to="/settings" aria-label="Settings">⚙️</Link>
         </div>
       </header>
+
+      <section className="px-5 pt-4">
+        <Link
+          to="/zones"
+          className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-xl">{activeZone?.emoji ?? "🗺️"}</span>
+            <div>
+              <p className="text-sm font-bold">{activeZone?.name ?? "All zones"}</p>
+              <p className="text-[11px] text-muted-foreground">{g.zones.length} zones · tap to switch</p>
+            </div>
+          </div>
+          <span className="text-muted-foreground">›</span>
+        </Link>
+      </section>
 
       <section className="px-5 pt-5">
         <div className="rounded-2xl border border-primary/20 bg-primary-soft/60 p-5">
@@ -51,6 +70,26 @@ function Index() {
         </div>
       </section>
 
+      <section className="px-5 pt-5">
+        <div className="rounded-2xl border border-info/40 bg-info/10 p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🔮</span>
+              <div>
+                <p className="text-sm font-bold">Predictive Watering</p>
+                <p className="text-xs text-muted-foreground">
+                  {g.weatherSummary} · {g.humidityForecast}% humidity
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-muted-foreground">Next watering</p>
+              <p className="font-bold text-primary">{eta}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="px-5 pt-8">
         <h3 className="text-lg font-bold">Quick Actions</h3>
         <div className="mt-4 space-y-3">
@@ -66,6 +105,12 @@ function Index() {
           >
             <span className="text-2xl">📸</span> Growth Time-Lapse
           </Link>
+          <Link
+            to="/rules"
+            className="flex h-16 w-full items-center justify-center gap-2 rounded-2xl border border-primary/30 bg-card text-lg font-semibold text-foreground shadow-sm"
+          >
+            <span className="text-2xl">🧩</span> Build If/Then Rules
+          </Link>
           <Button onClick={g.waterNow} className="h-16 w-full rounded-2xl text-lg font-semibold shadow-md">
             <span className="mr-2 text-2xl">💧</span> Water Now
           </Button>
@@ -77,6 +122,18 @@ function Index() {
             <span className="mr-2 text-2xl">{g.lightsOn ? "☀️" : "🌙"}</span>
             Toggle Grow Lights
           </Button>
+        </div>
+      </section>
+
+      <section className="px-5 pt-6">
+        <div className="rounded-2xl border border-border bg-card p-5">
+          <h3 className="text-base font-bold">💧 Water Saved</h3>
+          <p className="mt-1 text-3xl font-bold text-primary">
+            {(g.waterSavedMl / 1000).toFixed(2)} L
+          </p>
+          <p className="text-xs text-muted-foreground">
+            vs traditional watering · {g.waterCount} precision events
+          </p>
         </div>
       </section>
 
@@ -97,6 +154,18 @@ function Index() {
       </section>
     </div>
   );
+}
+
+function formatEta(ms: number | null): string {
+  if (ms === null) return "—";
+  if (ms <= 0) return "Now";
+  const mins = Math.round(ms / 60000);
+  if (mins < 60) return `in ${mins} min`;
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  if (h < 24) return `in ${h}h ${m}m`;
+  const d = Math.floor(h / 24);
+  return `in ${d}d ${h % 24}h`;
 }
 
 function Stat({ emoji, value }: { emoji: string; value: string }) {

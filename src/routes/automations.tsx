@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/automations")({
   component: AutomationsPage,
@@ -67,6 +68,22 @@ function AutomationsPage() {
       </header>
 
       <section className="px-5 pt-5">
+        <Link
+          to="/rules"
+          className="mb-4 flex items-center justify-between rounded-2xl border border-primary/30 bg-primary-soft/60 p-4"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🧩</span>
+            <div>
+              <p className="font-bold">Custom If/Then Rules</p>
+              <p className="text-xs text-muted-foreground">
+                Build sensor-driven recipes that fire automatically
+              </p>
+            </div>
+          </div>
+          <span className="text-muted-foreground">›</span>
+        </Link>
+
         <h2 className="text-lg font-bold">Active Schedules</h2>
         <p className="text-sm text-muted-foreground">Manage your routines</p>
 
