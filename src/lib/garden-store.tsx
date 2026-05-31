@@ -150,11 +150,82 @@ export function GardenProvider({ children }: { children: ReactNode }) {
   const [preset, setPreset] = useState<PlantPreset>(PLANT_PRESETS[0]);
   const [waterCount, setWaterCount] = useState(0);
   const [waterSavedMl, setWaterSavedMl] = useState(0);
-  const [humidityForecast] = useState(() => 45 + Math.round(Math.random() * 20));
-  const [weatherSummary] = useState(() => {
-    const opts = ["Partly cloudy, 22°C", "Light rain expected", "Sunny & warm", "Overcast, mild"];
-    return opts[Math.floor(Math.random() * opts.length)];
-  });
+  // Live weather (Open-Meteo, no API key required). Defaults are deterministic
+  // so SSR and first client render match; real values arrive after fetch.
+  const [humidityForecast, setHumidityForecast] = useState(55);
+  const [weatherSummary, setWeatherSummary] = useState("Fetching weather…");
+  const [outdoorTempC, setOutdoorTempC] = useState<number | null>(null);
+  const [precipProb, setPrecipProb] = useState<number>(0);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const codeToText = (c: number): string => {
+      if (c === 0) return "Clear sky";
+      if ([1, 2].includes(c)) return "Mainly clear";
+      if (c === 3) return "Overcast";
+      if ([45, 48].includes(c)) return "Foggy";
+      if ([51, 53, 55].includes(c)) return "Drizzle";
+      if ([61, 63, 65, 80, 81, 82].includes(c)) return "Rain";
+      if ([71, 73, 75, 77, 85, 86].includes(c)) return "Snow";
+      if ([95, 96, 99].includes(c)) return "Thunderstorm";
+      return "Mild";
+    };
+
+    const fetchWeather = async (lat: number, lon: number) => {
+      try {
+        const url =
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+          `&current=temperature_2m,relative_humidity_2m,weather_code,precipitation` +
+          `&hourly=relative_humidity_2m,precipitation_probability&forecast_days=1&timezone=auto`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("weather fetch failed");
+        const json = await res.json();
+        if (cancelled) return;
+        const tempC = Math.round(json?.current?.temperature_2m ?? 22);
+        const humNow = Math.round(json?.current?.relative_humidity_2m ?? 55);
+        const code = Number(json?.current?.weather_code ?? 1);
+        const hums: number[] = json?.hourly?.relative_humidity_2m ?? [];
+        const pops: number[] = json?.hourly?.precipitation_probability ?? [];
+        const avgHum = hums.length
+          ? Math.round(hums.slice(0, 12).reduce((a, b) => a + b, 0) / Math.min(12, hums.length))
+          : humNow;
+        const maxPop = pops.length ? Math.max(...pops.slice(0, 12)) : 0;
+        setOutdoorTempC(tempC);
+        setHumidityForecast(avgHum);
+        setPrecipProb(maxPop);
+        setWeatherSummary(`${codeToText(code)}, ${tempC}°C`);
+      } catch {
+        if (!cancelled) setWeatherSummary("Weather unavailable");
+      }
+    };
+
+    const start = (lat: number, lon: number) => {
+      fetchWeather(lat, lon);
+      const id = setInterval(() => fetchWeather(lat, lon), 15 * 60 * 1000);
+      return id;
+    };
+
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+    if (typeof navigator !== "undefined" && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          intervalId = start(pos.coords.latitude, pos.coords.longitude);
+        },
+        () => {
+          intervalId = start(40.7128, -74.006); // fallback: New York
+        },
+        { timeout: 5000 },
+      );
+    } else {
+      intervalId = start(40.7128, -74.006);
+    }
+
+    return () => {
+      cancelled = true;
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, []);
   const [history, setHistory] = useState<Reading[]>([]);
   const [zones, setZones] = useState<Zone[]>([
     { id: "z1", name: "Living Room", emoji: "🛋️", location: "Indoor", moisture: 54, temperature: 23, light: 780, health: 92 },
@@ -283,17 +354,20 @@ export function GardenProvider({ children }: { children: ReactNode }) {
     return Math.max(0, Math.min(100, Math.round(raw)));
   }, [moisture, lightsOn, lightBrightness]);
 
-  // Predictive watering ETA using current moisture, drying rate and humidity forecast.
+  // Predictive watering ETA — combines current moisture with live weather:
+  // humidity slows drying, heat speeds it up, and a high rain probability
+  // pushes the next watering further out (assume nature handles outdoor zones).
   const nextWaterEtaMs = useMemo(() => {
     const target = preset.ranges.moisture[0]; // lower bound of ideal range
     if (moisture <= target) return 0;
-    // Base drying ~1%/min; higher humidity slows it, hotter & lights-on speeds it up.
     const humidityFactor = Math.max(0.5, 1 - (humidityForecast - 40) / 100);
-    const heatFactor = lightsOn ? 1.25 : 1;
-    const ratePerMin = 1 * humidityFactor * heatFactor;
+    const tempC = outdoorTempC ?? 22;
+    const heatFactor = (lightsOn ? 1.25 : 1) * (1 + Math.max(0, tempC - 22) * 0.03);
+    const rainFactor = Math.max(0.3, 1 - precipProb / 150); // 100% pop ≈ 0.33x drying
+    const ratePerMin = 1 * humidityFactor * heatFactor * rainFactor;
     const minsLeft = (moisture - target) / ratePerMin;
     return Math.round(minsLeft * 60_000);
-  }, [moisture, preset, humidityForecast, lightsOn]);
+  }, [moisture, preset, humidityForecast, lightsOn, outdoorTempC, precipProb]);
 
   // Record a sensor history sample every 30s so users can export trends.
   useEffect(() => {
