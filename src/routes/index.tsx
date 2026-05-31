@@ -105,12 +105,6 @@ function Index() {
           >
             <span className="text-2xl">📸</span> Growth Time-Lapse
           </Link>
-          <Link
-            to="/rules"
-            className="flex h-16 w-full items-center justify-center gap-2 rounded-2xl border border-primary/30 bg-card text-lg font-semibold text-foreground shadow-sm"
-          >
-            <span className="text-2xl">🧩</span> Build If/Then Rules
-          </Link>
           <Button onClick={g.waterNow} className="h-16 w-full rounded-2xl text-lg font-semibold shadow-md">
             <span className="mr-2 text-2xl">💧</span> Water Now
           </Button>
