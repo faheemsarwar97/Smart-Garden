@@ -59,24 +59,6 @@ function StatusPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-bold">📤 Export Analytics</p>
-              <p className="text-xs text-muted-foreground">
-                {g.history.length} samples collected · download for offline analysis
-              </p>
-            </div>
-          </div>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <Button variant="outline" onClick={() => g.exportHistory("csv")}>
-              Download CSV
-            </Button>
-            <Button variant="outline" onClick={() => g.exportHistory("json")}>
-              Download JSON
-            </Button>
-          </div>
-        </div>
       </section>
     </div>
   );
