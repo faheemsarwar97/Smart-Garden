@@ -354,17 +354,20 @@ export function GardenProvider({ children }: { children: ReactNode }) {
     return Math.max(0, Math.min(100, Math.round(raw)));
   }, [moisture, lightsOn, lightBrightness]);
 
-  // Predictive watering ETA using current moisture, drying rate and humidity forecast.
+  // Predictive watering ETA — combines current moisture with live weather:
+  // humidity slows drying, heat speeds it up, and a high rain probability
+  // pushes the next watering further out (assume nature handles outdoor zones).
   const nextWaterEtaMs = useMemo(() => {
     const target = preset.ranges.moisture[0]; // lower bound of ideal range
     if (moisture <= target) return 0;
-    // Base drying ~1%/min; higher humidity slows it, hotter & lights-on speeds it up.
     const humidityFactor = Math.max(0.5, 1 - (humidityForecast - 40) / 100);
-    const heatFactor = lightsOn ? 1.25 : 1;
-    const ratePerMin = 1 * humidityFactor * heatFactor;
+    const tempC = outdoorTempC ?? 22;
+    const heatFactor = (lightsOn ? 1.25 : 1) * (1 + Math.max(0, tempC - 22) * 0.03);
+    const rainFactor = Math.max(0.3, 1 - precipProb / 150); // 100% pop ≈ 0.33x drying
+    const ratePerMin = 1 * humidityFactor * heatFactor * rainFactor;
     const minsLeft = (moisture - target) / ratePerMin;
     return Math.round(minsLeft * 60_000);
-  }, [moisture, preset, humidityForecast, lightsOn]);
+  }, [moisture, preset, humidityForecast, lightsOn, outdoorTempC, precipProb]);
 
   // Record a sensor history sample every 30s so users can export trends.
   useEffect(() => {
