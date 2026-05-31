@@ -14,7 +14,7 @@ export function AppShell() {
   const { pathname } = useLocation();
   return (
     <GardenProvider>
-      <div className="mx-auto flex min-h-screen max-w-md flex-col bg-background">
+      <div className="mx-auto flex min-h-screen max-w-md flex-col rounded-3xl border border-border bg-background shadow-2xl ring-1 ring-border/50">
         <main className="flex-1 pb-24">
           <Outlet />
         </main>
