@@ -31,19 +31,19 @@ function AppShellInner() {
         </main>
         <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-border bg-background/95 backdrop-blur">
           <ul className="grid grid-cols-5">
-            {tabs.map((t) => {
-              const active = pathname === t.to;
+            {tabs.map((tab) => {
+              const active = pathname === tab.to;
               return (
-                <li key={t.to}>
+                <li key={tab.to}>
                   <Link
-                    to={t.to}
+                    to={tab.to}
                     className="flex flex-col items-center gap-1 py-3 text-xs"
                   >
                     <span className={`text-2xl leading-none transition ${active ? "scale-110" : "opacity-60 grayscale"}`}>
-                      {t.emoji}
+                      {tab.emoji}
                     </span>
                     <span className={active ? "font-semibold text-foreground" : "text-muted-foreground"}>
-                      {/* labelKey lookup */}
+                      {t(tab.labelKey)}
                     </span>
                   </Link>
                 </li>
