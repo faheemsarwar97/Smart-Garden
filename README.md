@@ -1,208 +1,353 @@
-# Smart Garden
+# 🌱 Smart Garden
 
-A modern smart gardening dashboard for monitoring plant health, automations, alerts, and watering recommendations in one place.
+> Intelligent Plant Monitoring & Care Dashboard | AI-Powered Garden Assistant | Real-Time Health Tracking
 
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
-[![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
-[![Cloudflare](https://img.shields.io/badge/Cloudflare-Wrangler-orange?style=for-the-badge&logo=cloudflare)](https://developers.cloudflare.com/workers)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite)](https://vitejs.dev)
+[![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com)
+[![Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)](#)
+[![License](https://img.shields.io/badge/License-Open%20Source-blue?style=flat-square)](#license)
 
-Smart Garden is a responsive web application designed for plant enthusiasts and home growers who want a clear view of their garden health. It provides real-time monitoring, quick actions, predictive watering guidance, and an AI-powered assistant to help users make better care decisions.
+<div align="center">
+  <p><strong>Take the guesswork out of plant care with smart monitoring, predictive insights, and AI recommendations.</strong></p>
+  <p>
+    <a href="#features">Features</a> •
+    <a href="#quick-start">Quick Start</a> •
+    <a href="#tech-stack">Tech Stack</a> •
+    <a href="#architecture">Architecture</a> •
+    <a href="#contributing">Contributing</a>
+  </p>
+</div>
 
-## Features
+---
 
-- Plant health overview with live metrics
-- Moisture, temperature, and light monitoring
-- Predictive watering insights
-- Plant detail management and presets
-- Grow light controls and brightness adjustments
-- Automations and alert management
-- Garden zones and tracking
-- AI-powered garden assistant
-- Growth and achievement tracking
-- Clean, mobile-friendly dashboard UI
+## ✨ Overview
 
-## Tech Stack
+**Smart Garden** is a production-ready dashboard application for modern plant care. Whether managing a single houseplant or a complete indoor garden, Smart Garden provides real-time health monitoring, predictive watering recommendations, and an AI-powered assistant to help you make informed care decisions.
 
-- React 19
-- TypeScript
-- Vite
-- Tailwind CSS
-- TanStack Router
-- TanStack Query
-- Radix UI
-- Recharts
-- Cloudflare Workers / Wrangler
-- ESLint + Prettier
+Built for precision plant management with a focus on sustainability and ease of use.
 
-## Project Structure
+---
 
-```text
-Smart-Garden/
-├── src/
-│   ├── components/
-│   │   └── ui/
-│   ├── hooks/
-│   ├── lib/
-│   ├── routes/
-│   │   ├── __root.tsx
-│   │   ├── index.tsx
-│   │   ├── plant.tsx
-│   │   ├── status.tsx
-│   │   ├── scan.tsx
-│   │   ├── chat.tsx
-│   │   ├── alerts.tsx
-│   │   ├── automations.tsx
-│   │   ├── growth.tsx
-│   │   ├── achievements.tsx
-│   │   ├── zones.tsx
-│   │   ├── rules.tsx
-│   │   ├── settings.tsx
-│   │   └── ...
-│   ├── router.tsx
-│   ├── routeTree.gen.ts
-│   ├── server.ts
-│   ├── start.ts
-│   ├── styles.css
-│   └── ...
-├── public/
-├── package.json
-├── vite.config.ts
-├── tsconfig.json
-├── wrangler.jsonc
-├── components.json
-├── eslint.config.js
-├── .prettierrc
-├── .prettierignore
-├── .gitignore
-├── bun.lock
-└── README.md
-```
+## 🎯 Features
 
-## Key Screens and Views
+### 📊 Dashboard & Monitoring
+- **Real-time Plant Health Score** — Visual indicator of overall plant wellness
+- **Live Environmental Metrics** — Moisture %, Temperature °C, Light Levels (lux)
+- **Quick-Glance Overview** — All critical info on one screen
+- **Multi-Zone Support** — Manage multiple garden zones seamlessly
 
-The app includes a set of route-based dashboard screens such as:
+### 🤖 AI-Powered Assistant
+- **Context-Aware Chat** — AI reads your live dashboard data
+- **Smart Recommendations** — Get watering and care advice
+- **Natural Language** — Ask questions in plain English
+- **Instant Answers** — Powered by server-side AI functions
 
-- Home dashboard
-- Plant details
-- Garden status
-- Growth tracking
-- Alerts and notifications
-- Automation rules
-- Garden assistant chat
-- Zones management
-- Settings
-- Achievements
+### 💧 Smart Watering
+- **Predictive Watering** — AI predicts when to water based on soil & weather
+- **One-Tap Watering** — Manual water now button for quick action
+- **Water Usage Tracking** — See liters saved vs. traditional methods
+- **ETA Countdown** — Know exactly when next watering is due
 
-## Local Development
+### ☀️ Lighting Control
+- **Grow Light Management** — Toggle grow lights on/off
+- **Brightness Adjustment** — Fine-tune light intensity (0-100%)
+- **Light Hour Tracking** — Monitor daily light exposure
+- **Preset Configurations** — Species-specific light presets
+
+### 🔔 Alerts & Automation
+- **Smart Alerts** — Get notified of plant health issues
+- **Automation Rules** — Set up automatic actions and schedules
+- **Status Page** — Monitor all active alerts and conditions
+- **Rules Engine** — Create custom care routines
+
+### 📈 Growth & Insights
+- **Growth Timelapse** — Capture and track plant growth over time
+- **Achievement Badges** — Celebrate milestones and care goals
+- **Activity Log** — See today's care events and history
+- **Analytics Dashboard** — Long-term health trends
+
+### 🌿 Plant Management
+- **Plant Presets** — 20+ plant species with ideal ranges
+  - Moisture, Temperature, Light, Light Hours
+  - Auto-configure for optimal care
+- **Custom Plant Setup** — Name, location, planting date
+- **Species Info** — Care notes and requirements
+- **Photo Scanning** — AI leaf health analysis
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
+- **Node.js** 18+ or **Bun** 1.0+
+- npm, yarn, or Bun
 
-- Node.js 18+
-- Bun or npm
-
-### Install dependencies
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/faheemsarwar97/Smart-Garden.git
+cd Smart-Garden
+
+# Install dependencies
 npm install
-```
-
-or
-
-```bash
+# or with Bun
 bun install
 ```
 
-### Start the app
+### Run Locally
 
 ```bash
+# Start development server
 npm run dev
-```
-
-or
-
-```bash
+# or with Bun
 bun run dev
 ```
 
-### Production build
+The app opens at `http://localhost:5173`
 
+### Production Build
+
+```bash
+npm run build       # Build for production
+npm run preview     # Preview production build
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technologies |
+|-------|---------------|
+| **UI Framework** | React 19 • TypeScript 5.8 |
+| **Build Tool** | Vite 7 • Tailwind CSS 4 |
+| **Routing** | TanStack Router 1.168 |
+| **State & Data** | TanStack Query 5.83 |
+| **Components** | Radix UI • shadcn/ui Pattern |
+| **Forms** | React Hook Form • Zod |
+| **Charts** | Recharts 2.15 |
+| **Notifications** | Sonner |
+| **Backend** | Cloudflare Workers • Nitro |
+| **Package Manager** | Bun |
+| **Code Quality** | ESLint 9 • Prettier 3 |
+
+---
+
+## 📁 Project Structure
+
+```
+Smart-Garden/
+├── src/
+│   ├── components/
+│   │   └── ui/                    # Radix UI-based components
+│   ├── hooks/                     # Custom React hooks
+│   ├── lib/
+│   │   ├── garden-store.ts        # Global garden state
+│   │   ├── i18n.ts                # Internationalization
+│   │   ├── chat.functions.ts      # AI assistant logic
+│   │   └── plant-presets.ts       # 20+ plant configs
+│   ├── routes/                    # Page components
+│   │   ├── __root.tsx             # Root layout
+│   │   ├── index.tsx              # Dashboard home
+│   │   ├── plant.tsx              # Plant details & config
+│   │   ├── chat.tsx               # AI assistant
+│   │   ├── scan.tsx               # Leaf health scan
+│   │   ├── growth.tsx             # Growth tracking
+│   │   ├── alerts.tsx             # Alert management
+│   │   ├── automations.tsx        # Automation rules
+│   │   ├── zones.tsx              # Multi-zone management
+│   │   ├── status.tsx             # Health status overview
+│   │   ├── achievements.tsx       # Badges & milestones
+│   │   ├── rules.tsx              # Advanced rules
+│   │   └── settings.tsx           # App settings
+│   ├── router.tsx                 # Router config
+│   ├── server.ts                  # Server setup
+│   ├── start.ts                   # App entry point
+│   └── styles.css                 # Global styles
+├── public/                        # Static assets
+├── vite.config.ts                 # Vite configuration
+├── tsconfig.json                  # TypeScript config
+├── wrangler.jsonc                 # Cloudflare config
+├── components.json                # UI components registry
+└── package.json
+```
+
+---
+
+## 🏗️ Architecture
+
+### State Management
+- **Garden Store** (`lib/garden-store.ts`) — Single source of truth for all garden data
+- **useGarden() Hook** — Access garden state anywhere in the app
+- **TanStack Query** — Server state sync and caching
+
+### Routing
+- **File-based Routes** — TanStack Router auto-generates routes
+- **Nested Layouts** — Shared header/nav across pages
+- **Type-Safe Links** — Compile-time route safety
+
+### Internationalization
+- **useI18n() Hook** — Multi-language support built-in
+- **Translation Keys** — Semantic, readable translation strings
+
+### AI Integration
+- **Server Functions** — `askGardenAi()` runs on backend
+- **Context-Aware** — AI has access to live plant metrics
+- **Real-time Streaming** — Chat updates in real-time
+
+---
+
+## 🎨 Key Screens
+
+| Screen | Purpose |
+|--------|---------|
+| **Home Dashboard** | Plant overview, health score, quick actions |
+| **Plant Details** | Species config, light controls, presets |
+| **Garden Assistant** | AI chat with context-aware recommendations |
+| **Growth Timelapse** | Photo-based growth tracking |
+| **Leaf Scanner** | AI-powered plant health analysis |
+| **Alerts** | Notifications and warning management |
+| **Automations** | Schedule rules and auto-actions |
+| **Zones** | Manage multiple garden areas |
+| **Status** | System health and condition overview |
+| **Achievements** | Badges and care milestones |
+| **Settings** | App preferences and configuration |
+
+---
+
+## 💡 Usage Examples
+
+### Check Plant Health
+1. Open dashboard
+2. View health score and live metrics
+3. See predictive watering countdown
+
+### Get AI Recommendations
+1. Go to **Garden Assistant**
+2. Ask: "Is my plant healthy?" or "When should I water?"
+3. Receive contextual AI advice
+
+### Configure Plant Species
+1. Navigate to **Plant Details**
+2. Select from 20+ plant presets
+3. Auto-configures ideal ranges for moisture, temp, light
+
+### Set Up Automations
+1. Go to **Automations**
+2. Create new automation rule
+3. Define schedule and action
+
+---
+
+## 🔐 Security & Performance
+
+- **TypeScript Strict Mode** — Type safety throughout
+- **Server-Side Rendering Ready** — TanStack Start integration
+- **Edge Deployment** — Optimized for Cloudflare Workers
+- **Responsive Design** — Mobile-first approach
+- **Fast Load Times** — Vite + optimized bundle
+
+---
+
+## 📊 Language Composition
+
+- TypeScript: **97.7%**
+- CSS: **1.9%**
+- JavaScript: **0.4%**
+
+---
+
+## 🚀 Deployment
+
+### Cloudflare Workers
+The project includes `wrangler.jsonc` for edge deployment:
+
+```bash
+wrangler deploy
+```
+
+### Traditional Hosting
 ```bash
 npm run build
+# Deploy dist/ to your hosting provider
 ```
 
-### Preview production build
+---
 
-```bash
-npm run preview
-```
+## 🤝 Contributing
 
-## Available Scripts
+Contributions, issues, and feature requests are welcome!
 
-```bash
-npm run dev
-npm run build
-npm run build:dev
-npm run preview
-npm run lint
-npm run format
-```
+### Development Workflow
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Commit** changes: `git commit -m 'Add amazing feature'`
+4. **Push** to branch: `git push origin feature/amazing-feature`
+5. **Open** a Pull Request
 
-## Architecture Overview
+### Code Quality
+- Run `npm run lint` for ESLint checks
+- Run `npm run format` for Prettier formatting
+- Ensure TypeScript types are correct
 
-The application follows a modular frontend architecture built with modern React patterns:
+---
 
-- Route-based screens under `src/routes`
-- Reusable UI primitives under `src/components/ui`
-- Shared logic and utilities under `src/lib`
-- Server actions and app bootstrap in `src/server.ts` and `src/start.ts`
-- Global styling via `src/styles.css`
+## 🗺️ Roadmap
 
-## AI Assistant
+- [ ] Real IoT sensor integration (moisture probes, temp sensors)
+- [ ] Plant image recognition API
+- [ ] Advanced analytics dashboards
+- [ ] Export data (CSV, PDF reports)
+- [ ] Mobile app (React Native)
+- [ ] Push notifications
+- [ ] REST API backend
+- [ ] Dark mode theme
+- [ ] Multi-language support enhancement
+- [ ] Community plant database
 
-The app includes a garden assistant experience powered by server-side AI functions. It uses current garden context such as health score, soil moisture, temperature, and active automations to answer user questions and provide recommendations.
+---
 
-## Deployment
+## 📝 License
 
-This project is configured for a Cloudflare-based deployment setup using `wrangler.jsonc`, making it suitable for a lightweight edge-hosted frontend deployment workflow.
+This project is open source. To distribute or publish publicly, consider adding an appropriate license:
+- MIT (permissive, recommended)
+- Apache 2.0
+- GPL 3.0
 
-## Roadmap
+---
 
-Planned enhancements may include:
+## 🙋 Support & Questions
 
-- real sensor integrations
-- plant database and recognition
-- richer analytics dashboards
-- mobile-first refinements
-- notification integrations
-- expanded AI recommendations
+- **Found a bug?** Open an [issue](https://github.com/faheemsarwar97/Smart-Garden/issues)
+- **Have a feature idea?** Start a [discussion](https://github.com/faheemsarwar97/Smart-Garden/discussions)
+- **Need help?** Check the [wiki](https://github.com/faheemsarwar97/Smart-Garden/wiki) (coming soon)
 
-## Contributing
+---
 
-Contributions are welcome. To contribute:
+## 🙌 Acknowledgments
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Open a pull request
+- [React](https://react.dev) — UI library
+- [Vite](https://vitejs.dev) — Lightning-fast build tool
+- [Tailwind CSS](https://tailwindcss.com) — Utility-first CSS
+- [TanStack](https://tanstack.com) — Router & Query
+- [Radix UI](https://www.radix-ui.com) — Primitives
+- [Recharts](https://recharts.org) — Data visualization
+- [Cloudflare](https://cloudflare.com) — Edge computing
 
-## License
+---
 
-This project is currently provided as an open-source codebase without a specific license file. If you plan to distribute or publish it publicly, consider adding an appropriate license such as MIT.
+## 👨‍💻 Author
 
-## Author
+**Muhammad Faheem Sarwar**
 
-Muhammad Faheem Sarwar
+- GitHub: [@faheemsarwar97](https://github.com/faheemsarwar97)
+- Repository: [Smart-Garden](https://github.com/faheemsarwar97/Smart-Garden)
 
-- GitHub: https://github.com/faheemsarwar97
-- Repository: https://github.com/faheemsarwar97/Smart-Garden
+---
 
-## Acknowledgements
-
-- React
-- Vite
-- Tailwind CSS
-- TanStack
-- Radix UI
-- Cloudflare Workers
+<div align="center">
+  <p><strong>Built with 💚 for plant lovers and developers</strong></p>
+  <p>If you find this project helpful, please consider giving it a ⭐</p>
+</div>
